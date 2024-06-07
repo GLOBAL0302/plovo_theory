@@ -13,3 +13,8 @@ export interface DishMutation {
   price: string;
   vegetarian: boolean;
 }
+
+export interface CartDish{
+  dish:Dish;
+  amount: number;
+}

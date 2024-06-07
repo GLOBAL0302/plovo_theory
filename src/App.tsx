@@ -4,7 +4,7 @@ import DishForm from './components/DishForm/DishForm';
 import Dishes from './components/Dishes/Dishes';
 import Cart from './components/Cart/Cart';
 import { useState } from 'react';
-import { Dish } from './types';
+import {CartDish, Dish} from './types';
 
 const App = () => {
   const [dishes, setDishes] = useState<Dish[]>([
@@ -34,9 +34,32 @@ const App = () => {
     },
   ]);
 
+
+  const [cartDishes, setCartDishes] = useState<CartDish[]>([
+
+  ])
+
   const addDish = (dish: Dish) => {
     setDishes((prevState) => [...prevState, dish]);
   };
+
+  const addDishToCart = (dish:Dish)=>{
+     setCartDishes((prevState)=>{
+       const existingIndex = prevState.findIndex(cartDish =>{
+         return cartDish.dish.id === dish.id
+       })
+
+       if(existingIndex === -1){
+         return[...prevState, {dish, amount: 1}]
+       }
+       return prevState.map((cartDish, index)=>{
+         if(index === existingIndex){
+           return {...cartDish, amount : cartDish.amount + 1}
+         }
+         return  cartDish
+       })
+     })
+  }
 
   return (
     <>
@@ -49,10 +72,13 @@ const App = () => {
             <DishForm onSubmit={addDish} />
           </div>
           <div className="col-4">
-            <Dishes dishes={dishes} />
+            <Dishes
+              dishes={dishes}
+              addToCart={addDishToCart}
+            />
           </div>
           <div className="col-4">
-            <Cart />
+            <Cart cartDishes={cartDishes}/>
           </div>
         </div>
       </main>
