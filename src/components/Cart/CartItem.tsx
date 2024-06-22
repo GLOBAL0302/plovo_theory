@@ -11,7 +11,7 @@ const CartItem:React.FC<Props> = ({cartDish}) => {
       <div className='row align-items-center'>
         <div className='col'>{cartDish.dish.name}</div>
         <div className='col-2'>x{cartDish.amount}</div>
-        <div className='col-3'>{price} KGS</div>
+        <div className='col-3 text-nowrap'>{price} KGS</div>
       </div>
     </div>
   );

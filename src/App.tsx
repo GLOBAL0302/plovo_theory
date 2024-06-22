@@ -1,10 +1,13 @@
 import './App.css';
 import Toolbar from './components/Toolbar/Toolbar';
-import DishForm from './components/DishForm/DishForm';
-import Dishes from './components/Dishes/Dishes';
-import Cart from './components/Cart/Cart';
+
 import { useState } from 'react';
 import {CartDish, Dish} from './types';
+import Home from './containers/Home/Home';
+import NewDish from './containers/NewDish/NewDish';
+import {Route, Routes} from 'react-router-dom';
+import Checkout from './containers/Checkout/Checkout';
+import Order from './containers/Order/Order';
 
 const App = () => {
   const [dishes, setDishes] = useState<Dish[]>([
@@ -35,6 +38,9 @@ const App = () => {
   ]);
 
 
+
+
+
   const [cartDishes, setCartDishes] = useState<CartDish[]>([
 
   ])
@@ -61,26 +67,22 @@ const App = () => {
      })
   }
 
+
   return (
     <>
       <header>
-        <Toolbar />
+        <Toolbar
+        />
       </header>
       <main className="container-fluid">
-        <div className="row mt-2">
-          <div className="col-4">
-            <DishForm onSubmit={addDish} />
-          </div>
-          <div className="col-4">
-            <Dishes
-              dishes={dishes}
-              addToCart={addDishToCart}
-            />
-          </div>
-          <div className="col-4">
-            <Cart cartDishes={cartDishes}/>
-          </div>
-        </div>
+        <Routes>
+          <Route path="/" element={<Home dishes={dishes} addToCart={addDishToCart} cartDishes={cartDishes}/>}/>
+          <Route path="new-dish" element={<NewDish onCreate={addDish}/>}/>
+          <Route path="/checkout" element={<Checkout cartDishes={cartDishes}/>}>
+            <Route path="continue" element={<Order/>}/>
+          </Route>
+          <Route path="*" element={<h1>not found</h1>}/>
+        </Routes>
       </main>
     </>
   );
