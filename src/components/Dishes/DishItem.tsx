@@ -1,5 +1,6 @@
 import React from "react";
 import { Dish } from "../../types";
+import {Link} from 'react-router-dom';
 
 interface Props {
   dish: Dish;
@@ -18,6 +19,9 @@ const DishItem: React.FC<Props> = ({ dish, addToCart }) => {
           <h5 className="card-title">{dish.name}</h5>
           <p className="card-text small">{dish.description}</p>
           <p className="card-text">{dish.price} KGS</p>
+          <Link to={"/dishes/" + dish.id} className="btn btn-primary">
+            Go to this Dish
+          </Link>
         </div>
       </div>
     </div>

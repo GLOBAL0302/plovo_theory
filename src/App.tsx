@@ -8,6 +8,7 @@ import NewDish from './containers/NewDish/NewDish';
 import {Route, Routes} from 'react-router-dom';
 import Checkout from './containers/Checkout/Checkout';
 import Order from './containers/Order/Order';
+import DishPage from './containers/DishPage/DishPage';
 
 const App = () => {
   const [dishes, setDishes] = useState<Dish[]>([
@@ -79,8 +80,9 @@ const App = () => {
           <Route path="/" element={<Home dishes={dishes} addToCart={addDishToCart} cartDishes={cartDishes}/>}/>
           <Route path="new-dish" element={<NewDish onCreate={addDish}/>}/>
           <Route path="/checkout" element={<Checkout cartDishes={cartDishes}/>}>
-            <Route path="continue" element={<Order/>}/>
+            <Route path="continue" element={<Order cartDishes={cartDishes}/>}/>
           </Route>
+          <Route path="/dishes/:dishId" element={<DishPage/>}/>
           <Route path="*" element={<h1>not found</h1>}/>
         </Routes>
       </main>
