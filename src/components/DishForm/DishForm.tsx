@@ -1,25 +1,25 @@
-import { Dish, DishMutation } from "../../types";
+import {ApiDish, DishMutation} from '../../types';
 import React, { useState } from "react";
 
 interface Props {
-  onSubmit: (dish: Dish) => void;
+  onSubmit: (dish: ApiDish) => void;
+  existingDish?: ApiDish
 }
 
-const initialState = {
+const emptyState = {
   name: "",
   description: "",
   image: "",
   price: "",
-  vegetarian: false,
 };
-const DishForm: React.FC<Props> = ({ onSubmit }) => {
+const DishForm: React.FC<Props> = ({ onSubmit, existingDish }) => {
+
+  const initialState:DishMutation = existingDish ? ({...existingDish, price: existingDish.price.toString()}) : emptyState
   const [dishMutation, setDishmutation] = useState<DishMutation>(initialState);
 
   const changeDish = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    console.log("target name", event.target.name);
-    console.log("target value", event.target.value);
     setDishmutation((prevState) => ({
       ...prevState,
       [event.target.name]: event.target.value,
@@ -36,17 +36,15 @@ const DishForm: React.FC<Props> = ({ onSubmit }) => {
   const onFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     onSubmit({
-      id: Math.random().toString(),
       ...dishMutation,
       price: parseFloat(dishMutation.price),
     });
 
-    setDishmutation(initialState);
   };
 
   return (
     <form onSubmit={onFormSubmit}>
-      <h4>Add new Dish</h4>
+      <h4>{existingDish? "Edit Dish": "Add new Dish"}</h4>
       <div className="form-group">
         <label htmlFor="name">Name</label>
         <input
@@ -100,12 +98,11 @@ const DishForm: React.FC<Props> = ({ onSubmit }) => {
           type="checkbox"
           name="vegetarian"
           id="vegetarian"
-          checked={dishMutation.vegetarian}
           onChange={changeVeganBoolean}
         />
       </div>
       <button type="submit" className="btn btn-primary mt-2">
-        Create
+        {existingDish? "Update" : "Create"}
       </button>
     </form>
   );

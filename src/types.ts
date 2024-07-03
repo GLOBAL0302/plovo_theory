@@ -6,12 +6,17 @@ export interface Dish {
   price: number;
 }
 
+export type ApiDish = Omit<Dish, "id">
+
+export interface ApiDishesList{
+  [id:string]: ApiDish;
+}
+
 export interface DishMutation {
   name: string;
   description: string;
   image: string;
   price: string;
-  vegetarian: boolean;
 }
 
 export interface CartDish{
