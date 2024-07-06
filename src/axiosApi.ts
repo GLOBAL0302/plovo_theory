@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosApi = axios.create({
-  baseURL:"https://kubanychjs25-default-rtdb.europe-west1.firebasedatabase.app/",
+  baseURL:import.meta.env.VITE_API_URL,
 })
 
 export default axiosApi

@@ -8,14 +8,20 @@ const EditDish = () => {
   const navigate = useNavigate()
   const {id} = useParams()
   const [dish, setDish] = useState<ApiDish | null>(null)
+  const [isUpdating, setIsUpdating] = useState(false)
 
 
 
   const fetchOneDish = useCallback(async ()=>{
-    const {data:dish} = await axiosApi.get<ApiDish | null>(
-      `/dishes/${id}.json`
-    );
-    setDish(dish);
+    try{
+      setIsUpdating(true)
+      const {data:dish} = await axiosApi.get<ApiDish | null>(
+        `/dishes/${id}.json`
+      );
+      setDish(dish);
+    }finally {
+      setIsUpdating(false)
+    }
   },[id])
 
 
@@ -32,9 +38,8 @@ const EditDish = () => {
     <div className="row mt-2">
       <div className="col">
         {dish && (
-          <DishForm onSubmit={updateDish} existingDish={dish}/>
+          <DishForm onSubmit={updateDish} existingDish={dish} isLoading={isUpdating}/>
         )}
-
       </div>
     </div>
   );

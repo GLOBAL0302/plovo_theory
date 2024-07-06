@@ -1,8 +1,6 @@
 import './App.css';
-import Toolbar from './components/Toolbar/Toolbar';
-
 import {useCallback, useEffect, useState} from 'react';
-import {ApiDishesList, CartDish, Dish} from './types';
+import {ApiDishes, CartDish, Dish} from './types';
 import Home from './containers/Home/Home';
 import NewDish from './containers/NewDish/NewDish';
 import {Route, Routes, useLocation} from 'react-router-dom';
@@ -10,6 +8,9 @@ import Checkout from './containers/Checkout/Checkout';
 import Order from './containers/Order/Order';
 import axiosApi from './axiosApi';
 import EditDish from './containers/EditDish/EditDish';
+import Orders from './containers/Orders/Orders';
+import Layout from './components/Layout/Layout';
+import {toast} from 'react-toastify';
 
 const App = () => {
   const location = useLocation();
@@ -26,7 +27,7 @@ const App = () => {
   const fetchDishes = useCallback(async ()=>{
     try{
       setLoading(true);
-      const {data:dishes} = await axiosApi.get<ApiDishesList | null>("/dishes.json");
+      const {data:dishes} = await axiosApi.get<ApiDishes | null>("/dishes.json");
       if(!dishes){
         setDishes([]);
       }else{
@@ -60,14 +61,23 @@ const App = () => {
     });
   },[dishes]);
 
+
+  const clearCart = ()=>{
+    setCartDishes([])
+  }
+
   useEffect(() => {
    void updateCard();
   }, [updateCard]);
   const deleleDish = async (id:string)=>{
-    if(window.confirm("are you sure you want to delete")){
-      await axiosApi.delete(`/dishes/${id}.json`);
-      await fetchDishes();
-
+    try {
+      if(window.confirm("are you sure you want to delete")){
+        await axiosApi.delete(`/dishes/${id}.json`);
+        toast.success("Dish Deleted");
+        await fetchDishes();
+      }
+    }catch (e){
+      toast.error("Error occurred")
     }
   };
 
@@ -97,12 +107,7 @@ const App = () => {
 
 
   return (
-    <>
-      <header>
-        <Toolbar
-        />
-      </header>
-      <main className="container-fluid">
+    <Layout>
         <Routes>
           <Route path="/" element={
             <Home
@@ -115,13 +120,13 @@ const App = () => {
           }/>
           <Route path="new-dish" element={<NewDish/>}/>
           <Route path="/checkout" element={<Checkout cartDishes={cartDishes}/>}>
-            <Route path="continue" element={<Order cartDishes={cartDishes}/>}/>
+            <Route path="continue" element={<Order cartDishes={cartDishes} clearCart={clearCart}/>}/>
           </Route>
           <Route path="/edit-dish/:id" element={<EditDish/>}/>
+          <Route path="/orders" element={<Orders/>}/>
           <Route path="*" element={<h1>not found</h1>}/>
         </Routes>
-      </main>
-    </>
+    </Layout>
   );
 };
 

@@ -1,9 +1,11 @@
 import {ApiDish, DishMutation} from '../../types';
 import React, { useState } from "react";
+import ButtonSpinner from '../Spinner/buttonSpinner';
 
 interface Props {
   onSubmit: (dish: ApiDish) => void;
   existingDish?: ApiDish
+  isLoading?: boolean
 }
 
 const emptyState = {
@@ -12,7 +14,7 @@ const emptyState = {
   image: "",
   price: "",
 };
-const DishForm: React.FC<Props> = ({ onSubmit, existingDish }) => {
+const DishForm: React.FC<Props> = ({ onSubmit, existingDish, isLoading =false }) => {
 
   const initialState:DishMutation = existingDish ? ({...existingDish, price: existingDish.price.toString()}) : emptyState
   const [dishMutation, setDishmutation] = useState<DishMutation>(initialState);
@@ -101,7 +103,8 @@ const DishForm: React.FC<Props> = ({ onSubmit, existingDish }) => {
           onChange={changeVeganBoolean}
         />
       </div>
-      <button type="submit" className="btn btn-primary mt-2">
+      <button type="submit" className="btn btn-primary mt-2" disabled={isLoading}>
+        {isLoading && <ButtonSpinner/>}
         {existingDish? "Update" : "Create"}
       </button>
     </form>

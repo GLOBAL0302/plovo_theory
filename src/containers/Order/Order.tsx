@@ -1,14 +1,15 @@
 import React, {useState} from 'react';
-import {CartDish, Customer, OrderData} from '../../types';
+import {CartDish, Customer, ApiOrder} from '../../types';
 import axiosApi from '../../axiosApi';
 import {useNavigate} from 'react-router-dom';
 import Spinner from '../../components/Spinner/Spinner';
 
 interface Props{
   cartDishes:CartDish[]
+  clearCart:VoidFunction
 }
 
-const Order:React.FC<Props> = ({cartDishes}) => {
+const Order:React.FC<Props> = ({cartDishes, clearCart}) => {
   const [customer, setCustomer] = useState<Customer>(
     {
       name:"",
@@ -33,7 +34,7 @@ const Order:React.FC<Props> = ({cartDishes}) => {
     e.preventDefault();
     setIsLoading(true);
 
-    const order:OrderData ={
+    const order:ApiOrder ={
       customer,
       dishes:cartDishes
     }
@@ -42,6 +43,7 @@ const Order:React.FC<Props> = ({cartDishes}) => {
       await  axiosApi.post("/orders.json", order)
     }finally {
       setIsLoading(false)
+      clearCart()
       navigate("/")
     }
   }

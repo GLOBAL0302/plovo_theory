@@ -8,7 +8,7 @@ export interface Dish {
 
 export type ApiDish = Omit<Dish, "id">
 
-export interface ApiDishesList{
+export interface ApiDishes {
   [id:string]: ApiDish;
 }
 
@@ -30,7 +30,16 @@ export  interface Customer{
   phone:string
 }
 
-export interface OrderData{
+export interface ApiOrder {
   customer:Customer;
   dishes:CartDish[]
+}
+
+export interface ApiOrders{
+  [id:string]: ApiOrder
+}
+
+export interface Order extends ApiOrder{
+  id:string,
+  totalPrice: number
 }
